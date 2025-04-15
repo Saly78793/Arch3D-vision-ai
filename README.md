@@ -290,3 +290,182 @@ Initial commit - added HTML file and related resources
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تحسينات لموقع Arch3D Vision AI">
+    <title>Arch3D Vision AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            background-color: #34495e;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background: #2ecc71;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            margin: 0.5rem;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: #27ae60;
+        }
+
+        section {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #34495e;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: none;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* تحسين التصميم للأجهزة المحمولة */
+        @media (max-width: 768px) {
+            nav a {
+                font-size: 0.9rem;
+                padding: 0.3rem 0.8rem;
+            }
+
+            section {
+                padding: 1rem;
+            }
+
+            footer {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav a {
+                font-size: 0.8rem;
+                padding: 0.2rem 0.6rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            section {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>مرحبًا في Arch3D Vision AI</h1>
+        <p>استمتع بمساحة تصميم متكاملة</p>
+    </header>
+    
+    <nav>
+        <a href="#about">من نحن</a>
+        <a href="#services">خدماتنا</a>
+        <a href="#contact">اتصل بنا</a>
+    </nav>
+    
+    <section id="about">
+        <h2>من نحن</h2>
+        <p>Arch3D Vision AI متخصص في تصميم المساحات لتحسين رؤيتك المستقبلية.</p>
+    </section>
+    
+    <section id="services">
+        <h2>خدماتنا</h2>
+        <p>تصميم ثلاثي الأبعاد، تخطيط المساحات، والتحليل الذكي.</p>
+    </section>
+    
+    <section id="contact">
+        <h2>اتصل بنا</h2>
+        <p>تواصل معنا للحصول على أفضل تصميم لمساحتك.</p>
+    </section>
+    
+    <button id="back-to-top" title="الرجوع للأعلى">↑</button>
+
+    <footer>
+        &copy; 2025 Arch3D Vision AI - جميع الحقوق محفوظة
+    </footer>
+    
+    <script>
+        // زر الرجوع للأعلى
+        const backToTopButton = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // التأكد من أن القائمة تعمل على الأجهزة المحمولة
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
