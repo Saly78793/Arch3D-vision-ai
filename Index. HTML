@@ -1,104 +1,192 @@
-<footer>
-    <p>© 2025 Your Name or Company. All rights reserved.</p>
-    <p>Unauthorized use, reproduction, or distribution of this application is strictly prohibited.</p>
-</footer>
-
-<script>
-    let isFreePeriod = true; // Control the free period
-
-    async function generate3DModel() {
-        const fileInput = document.getElementById('uploadInput');
-        const descriptionInput = document.getElementById('descriptionInput');
-        const outputDiv = document.getElementById('output');
-        const subscriptionDiv = document.getElementById('subscription');
-        outputDiv.innerHTML = ''; // Clear previous output
-
-        // Check if free period is still active
-        if (!isFreePeriod) {
-            subscriptionDiv.innerHTML = '<p style="color: red;">The free trial has ended. Please subscribe to continue using the service.</p>';
-            return;
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تطبيق Arch3D Vision AI لإنشاء الصور والنماذج ثلاثية الأبعاد">
+    <title>Arch3D Vision AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            direction: rtl;
         }
 
-        if (!fileInput.files.length) {
-            alert('Please upload a 2D architectural drawing.');
-            return;
+        header {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
         }
 
-        const file = fileInput.files[0];
-
-        // Check file type
-        if (!file.type.startsWith('image/')) {
-            alert('Please upload a valid image file.');
-            return;
+        nav {
+            background: #444;
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem 0;
         }
 
-        const description = descriptionInput.value.trim();
-        if (!description) {
-            alert('Please provide a description for the model.');
-            return;
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
         }
 
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('description', description);
+        main {
+            padding: 1rem;
+        }
 
-        try {
-            outputDiv.innerHTML = '<p>Processing your 2D drawing...</p>';
-            
-            // Simulate sending the file and description to a backend AI service
-            const response = await fetch('http://localhost:3000/generate-3d-model', {
-                method: 'POST',
-                body: formData
-            });
+        .canvas-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            border: 1px solid #ccc;
+            margin: 1rem 0;
+        }
 
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            margin-top: 1rem;
+        }
+
+        .controls label {
+            margin-right: 1rem;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Arch3D Vision AI</h1>
+    </header>
+    <nav>
+        <a href="#create">إنشاء صورة</a>
+        <a href="#import">استيراد ملفات</a>
+        <a href="#customize">تخصيص الألوان</a>
+    </nav>
+    <main>
+        <!-- قسم إنشاء الصور -->
+        <section id="create">
+            <h2>إنشاء صورة جديدة</h2>
+            <div class="canvas-container">
+                <canvas id="imageCanvas"></canvas>
+            </div>
+            <button onclick="generateImage()">إنشاء صورة</button>
+        </section>
+
+        <!-- قسم استيراد الملفات -->
+        <section id="import">
+            <h2>استيراد ملفات DWG وBDF</h2>
+            <form id="fileUploadForm">
+                <label for="dwgFile">رفع ملف DWG:</label>
+                <input type="file" id="dwgFile" accept=".dwg" />
+                <br />
+                <label for="bdfFile">رفع ملف BDF:</label>
+                <input type="file" id="bdfFile" accept=".bdf" />
+                <br />
+                <button type="button" onclick="uploadFiles()">رفع الملفات</button>
+            </form>
+        </section>
+
+        <!-- قسم تخصيص الألوان -->
+        <section id="customize">
+            <h2>تخصيص الألوان</h2>
+            <div class="controls">
+                <label for="wallColor">لون الجدران:</label>
+                <input type="color" id="wallColor" value="#ffffff" onchange="changeWallColor()" />
+                <label for="furnitureColor">لون الأثاث:</label>
+                <input type="color" id="furnitureColor" value="#ffffff" onchange="changeFurnitureColor()" />
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Arch3D Vision AI. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- إضافة مكتبة Open Design -->
+    <script src="https://cdn.jsdelivr.net/npm/@opendesign/autocad.js"></script>
+    <script>
+        // إنشاء صورة
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function generateImage() {
+            canvas.width = 400;
+            canvas.height = 300;
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // رسم جدار وأثاث بسيط
+            ctx.fillStyle = '#ccc'; // لون الجدار الافتراضي
+            ctx.fillRect(50, 50, 300, 200);
+
+            ctx.fillStyle = '#666'; // لون الأثاث الافتراضي
+            ctx.fillRect(100, 100, 50, 50);
+        }
+
+        // تغيير لون الجدران
+        function changeWallColor() {
+            const color = document.getElementById('wallColor').value;
+            ctx.fillStyle = color;
+            ctx.fillRect(50, 50, 300, 200); // تحديث لون الجدران
+        }
+
+        // تغيير لون الأثاث
+        function changeFurnitureColor() {
+            const color = document.getElementById('furnitureColor').value;
+            ctx.fillStyle = color;
+            ctx.fillRect(100, 100, 50, 50); // تحديث لون الأثاث
+        }
+
+        // استيراد الملفات
+        async function uploadFiles() {
+            const dwgFile = document.getElementById('dwgFile').files[0];
+            const bdfFile = document.getElementById('bdfFile').files[0];
+
+            if (dwgFile) {
+                try {
+                    // استخدام Open Design لتحويل ملف DWG
+                    const reader = new FileReader();
+                    reader.onload = async (event) => {
+                        const arrayBuffer = event.target.result;
+
+                        // تحميل ملف DWG باستخدام Open Design
+                        const design = await OpenDesign.load(arrayBuffer);
+
+                        // استخراج البيانات من ملف DWG
+                        const entities = design.entities;
+                        console.log("Entities from DWG:", entities);
+
+                        alert(`تم رفع وتحليل ملف DWG بنجاح: ${dwgFile.name}`);
+                    };
+                    reader.readAsArrayBuffer(dwgFile);
+                } catch (error) {
+                    console.error("خطأ أثناء معالجة ملف DWG:", error);
+                    alert("حدث خطأ أثناء معالجة ملف DWG.");
+                }
             }
 
-            const result = await response.json();
-
-            if (result.modelUrl) {
-                outputDiv.innerHTML = `
-                    <p>${result.message}</p>
-                    <p>Description: ${description}</p>
-                    <iframe src="${result.modelUrl}" width="600" height="400" style="border:none;"></iframe>
-                `;
-            } else {
-                outputDiv.innerHTML = `<p>Error: Unable to generate the 3D model. Please try again.</p>`;
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            if (error.message.includes('Failed to fetch')) {
-                outputDiv.innerHTML = `<p style="color: red;">Error: Unable to connect to the server. Please check your internet connection or try again later.</p>`;
-            } else {
-                outputDiv.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+            if (bdfFile) {
+                alert(`تم رفع ملف BDF: ${bdfFile.name}`);
+                // هنا يمكنك إضافة منطق لمعالجة ملف BDF
             }
         }
-    }
 
-    // Function to toggle free period for demonstration purposes
-    function toggleFreePeriod() {
-        isFreePeriod = !isFreePeriod;
-        const subscriptionDiv = document.getElementById('subscription');
-        if (!isFreePeriod) {
-            subscriptionDiv.innerHTML = '<p style="color: red;">The free trial has ended. Please subscribe to continue using the service.</p>';
-        } else {
-            subscriptionDiv.innerHTML = '<p style="color: green;">You are in the free trial period. Enjoy!</p>';
-        }
-    }
-</script>
-
-<!-- HTML structure -->
-<div id="app">
-    <h1>2D to 3D Model Generator</h1>
-    <input type="file" id="uploadInput" accept="image/*">
-    <label for="descriptionInput">Model Description:</label>
-    <textarea id="descriptionInput" placeholder="Enter a description for the model"></textarea>
-    <button onclick="generate3DModel()">Generate 3D Model</button>
-    <div id="output"></div>
-    <div id="subscription">
-        <p style="color: green;">You are in the free trial period. Enjoy!</p>
-    </div>
-    <!-- Button to toggle free period (for demo purposes) -->
-    <button onclick="toggleFreePeriod()">Toggle Free Period</button>
-</div>
+        // تشغيل إنشاء الصورة عند التحميل
+        window.onload = generateImage;
+    </script>
+</body>
+</html>
