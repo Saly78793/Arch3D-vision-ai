@@ -1,0 +1,71 @@
+// إنشاء صورة
+const canvas = document.getElementById('imageCanvas');
+const ctx = canvas.getContext('2d');
+
+function generateImage() {
+    // ضبط أبعاد اللوحة
+    canvas.width = 400;
+    canvas.height = 300;
+
+    // مسح اللوحة ورسم خلفية بيضاء
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // رسم جدار وأثاث بسيط
+    ctx.fillStyle = '#ccc'; // لون الجدار الافتراضي
+    ctx.fillRect(50, 50, 300, 200); // الجدار
+
+    ctx.fillStyle = '#666'; // لون الأثاث الافتراضي
+    ctx.fillRect(100, 100, 50, 50); // الأثاث
+}
+
+// تغيير لون الجدران
+function changeWallColor() {
+    const color = document.getElementById('wallColor').value; // الحصول على اللون المختار
+    ctx.fillStyle = color;
+    ctx.fillRect(50, 50, 300, 200); // تحديث لون الجدران
+}
+
+// تغيير لون الأثاث
+function changeFurnitureColor() {
+    const color = document.getElementById('furnitureColor').value; // الحصول على اللون المختار
+    ctx.fillStyle = color;
+    ctx.fillRect(100, 100, 50, 50); // تحديث لون الأثاث
+}
+
+// استيراد الملفات
+async function uploadFiles() {
+    const dwgFile = document.getElementById('dwgFile').files[0]; // ملف DWG
+    const bdfFile = document.getElementById('bdfFile').files[0]; // ملف BDF
+
+    if (dwgFile) {
+        try {
+            // استخدام Open Design لتحويل ملف DWG
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const arrayBuffer = event.target.result;
+
+                // تحميل ملف DWG باستخدام Open Design
+                const design = await OpenDesign.load(arrayBuffer);
+
+                // استخراج البيانات من ملف DWG
+                const entities = design.entities;
+                console.log("Entities from DWG:", entities);
+
+                alert(`تم رفع وتحليل ملف DWG بنجاح: ${dwgFile.name}`);
+            };
+            reader.readAsArrayBuffer(dwgFile);
+        } catch (error) {
+            console.error("خطأ أثناء معالجة ملف DWG:", error);
+            alert("حدث خطأ أثناء معالجة ملف DWG.");
+        }
+    }
+
+    if (bdfFile) {
+        alert(`تم رفع ملف BDF: ${bdfFile.name}`);
+        // هنا يمكنك إضافة منطق لمعالجة ملف BDF
+    }
+}
+
+// تشغيل إنشاء الصورة عند التحميل
+window.onload = generateImage;
