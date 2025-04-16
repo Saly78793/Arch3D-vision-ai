@@ -4,23 +4,30 @@
     <p>Unauthorized use, reproduction, or distribution of this application is strictly prohibited.</p>
 </footer>
 
+<!-- Add external libraries -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash/lodash.min.js"></script>
+
 <script>
     let isFreePeriod = true; // Control the free period
 
     async function generate3DModel() {
         const fileInput = document.getElementById('uploadInput');
-        const descriptionInput = document.getElementById('descriptionInput');
         const outputDiv = document.getElementById('output');
         const subscriptionDiv = document.getElementById('subscription');
+        const loadingDiv = document.getElementById('loading');
         outputDiv.innerHTML = ''; // Clear previous output
+        loadingDiv.style.display = 'block'; // Show loading indicator
 
         // Check if free period is still active
         if (!isFreePeriod) {
+            loadingDiv.style.display = 'none'; // Hide loading indicator
             subscriptionDiv.innerHTML = '<p style="color: red;">The free trial has ended. Please subscribe to continue using the service.</p>';
             return;
         }
 
         if (!fileInput.files.length) {
+            loadingDiv.style.display = 'none'; // Hide loading indicator
             alert('Please upload a 2D architectural drawing.');
             return;
         }
@@ -29,39 +36,27 @@
 
         // Check file type
         if (!file.type.startsWith('image/')) {
+            loadingDiv.style.display = 'none'; // Hide loading indicator
             alert('Please upload a valid image file.');
-            return;
-        }
-
-        const description = descriptionInput.value.trim();
-        if (!description) {
-            alert('Please provide a description for the model.');
             return;
         }
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('description', description);
 
         try {
-            outputDiv.innerHTML = '<p>Processing your 2D drawing...</p>';
-            
-            // Simulate sending the file and description to a backend AI service
-            const response = await fetch('http://localhost:3000/generate-3d-model', {
-                method: 'POST',
-                body: formData
+            // Simulate sending the file to a backend AI service
+            const response = await axios.post('https://your-backend-api.com/generate-3d-model', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
-            }
+            const result = response.data;
 
-            const result = await response.json();
-
-            if (result.modelUrl) {
+            if (_.has(result, 'modelUrl')) {
                 outputDiv.innerHTML = `
-                    <p>${result.message}</p>
-                    <p>Description: ${description}</p>
+                    <p>Your 3D model has been successfully generated.</p>
                     <iframe src="${result.modelUrl}" width="600" height="400" style="border:none;"></iframe>
                 `;
             } else {
@@ -69,11 +64,9 @@
             }
         } catch (error) {
             console.error('Error:', error);
-            if (error.message.includes('Failed to fetch')) {
-                outputDiv.innerHTML = `<p style="color: red;">Error: Unable to connect to the server. Please check your internet connection or try again later.</p>`;
-            } else {
-                outputDiv.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
-            }
+            outputDiv.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+        } finally {
+            loadingDiv.style.display = 'none'; // Hide loading indicator
         }
     }
 
@@ -93,9 +86,10 @@
 <div id="app">
     <h1>2D to 3D Model Generator</h1>
     <input type="file" id="uploadInput" accept="image/*">
-    <label for="descriptionInput">Model Description:</label>
-    <textarea id="descriptionInput" placeholder="Enter a description for the model"></textarea>
     <button onclick="generate3DModel()">Generate 3D Model</button>
+    <div id="loading" style="display: none;">
+        <p>Processing your 2D drawing... <img src="https://i.imgur.com/kOn7HJt.gif" alt="Loading" width="20"></p>
+    </div>
     <div id="output"></div>
     <div id="subscription">
         <p style="color: green;">You are in the free trial period. Enjoy!</p>
