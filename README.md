@@ -64,7 +64,14 @@
             }
         } catch (error) {
             console.error('Error:', error);
-            outputDiv.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+            if (error.code === 'ERR_NETWORK') {
+                outputDiv.innerHTML = `<p style="color: red;">Network Error: Unable to connect to the server. Please check your internet connection and try again.</p>`;
+            } else if (error.response) {
+                // Server responded with a status code outside the 2xx range
+                outputDiv.innerHTML = `<p style="color: red;">Server Error: ${error.response.status} - ${error.response.statusText}</p>`;
+            } else {
+                outputDiv.innerHTML = `<p style="color: red;">An unexpected error occurred: ${error.message}</p>`;
+            }
         } finally {
             loadingDiv.style.display = 'none'; // Hide loading indicator
         }
