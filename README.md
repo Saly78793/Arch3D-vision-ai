@@ -104,3 +104,98 @@
     <!-- Button to toggle free period (for demo purposes) -->
     <button onclick="toggleFreePeriod()">Toggle Free Period</button>
 </div>
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Build Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        h1 {
+            color: #d9534f;
+            border-bottom: 2px solid #d9534f;
+            padding-bottom: 10px;
+        }
+        .workflow-steps {
+            margin: 20px 0;
+        }
+        .step {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        code {
+            display: block;
+            background: #2d2d2d;
+            color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>فشل في بناء GitHub Pages</h1>
+        <div class="workflow-steps">
+            <div class="step">
+                <h3>1. تحقق من سجلات البناء</h3>
+                <p>قم بزيارة <a href="https://github.com/Saly78793/Arch3D-vision-ai/actions" target="_blank">صفحة Actions</a> في المستودع</p>
+            </div>
+            <div class="step">
+                <h3>2. تحقق من ملف الـ workflow</h3>
+                <code>
+name: Build and Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-pages-artifact@v3
+      - uses: actions/upload-pages@v3
+                </code>
+            </div>
+            <div class="step">
+                <h3>3. خطوات الإصلاح</h3>
+                <ul>
+                    <li>تأكد من وجود ملف <code>dist</code> بعد التنفيذ</li>
+                    <li>تحقق من صحة ملفات البناء باستخدام <code>npm run build</code> محليًا</li>
+                    <li>تأكد من صحة الإصدار المحدد في <code>node-version</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
