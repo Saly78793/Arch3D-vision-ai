@@ -1,0 +1,11 @@
+<header>
+    <img src="assets/logo.png" alt="شعار Arch3D Vision AI" width="100">
+    <h1>Arch3D Vision AI</h1>
+</header>
+header {
+    background-image: url('../assets/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100px; /* ارتفاع القسم */
+}
