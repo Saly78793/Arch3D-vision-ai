@@ -111,4 +111,4 @@
 </div>
 `
 
----
+<img src="https://placehold.it/300x200" alt="Image Placeholder">---
